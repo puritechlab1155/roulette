@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>룰렛 | 콜마(모바일)</title>
+
+    <style>
+        * { margin: 0; padding: 0; }
+        img { display: block; border: 0; outline: none; }
+        button { border: 0; background: transparent; cursor: pointer; }
+        .content { width: 100%; max-width: 856px; display: flex; flex-direction: column; margin: 0 auto; overflow: hidden; }
+        .section01 .content { height: 1248px; background: url(kolmar-roulette/gif/bg1.gif) no-repeat; background-size: cover; background-position: center; }
+        .title-area { display: flex; justify-content: center; padding: 110px 0 60px; }
+        .title-area img { width: 80%; }
+
+        .roulette {
+            width: 621px;
+            height: 621px;
+            padding-top: 30px;
+            position: relative;
+            text-align: center;
+            margin: 0 auto;
+        }
+        .roulette_wheel_box { width: 100%; height: 100%; filter: drop-shadow(5px 5px 0 #000); }
+        .roulette_wheel {
+            width: 100%;
+            height: 100%;
+            transition: transform 2s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        .roulette_end_wheel { width: 500px; height: 500px; position: absolute; left: 50%; transform: translateX(-50%); bottom: 60px; z-index: 99; }
+        .roulette_end_wheel .end_wheel_img { display: none; width: 100%; height: 100%; }
+        .roulette_end_wheel .end_wheel_img.show { display: block; position: relative; width: 100%; height: 100%; }
+        .end_wheel_obj { position: absolute; left: 0; top: 0; z-index: 98; transform: translate(-9.5%, -5%); display: none; }
+        .end_wheel_obj.show { display: block; }
+        .roulette-niddle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -20px);
+            z-index: 201;filter: drop-shadow(7px 5px 0 #000);
+        }
+        .start_button {
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+        .roulette_center { display: block; width: 240px; height: 70px; margin: 50px auto 0; cursor: pointer; }
+        .roulette_center img { width: 100%; height: 100%; }
+        .cont-box { width: 500px; height: 300px; background: #fafafa; align-items: center; justify-content: center; display: none; }
+
+        .event-wrap { position: relative; }
+
+        .section02 .content { position: relative; }
+        .section02 .content .candycane { width: 75px; height: 115px; position: absolute; left: 7%; top: 3%; }
+        .section02 .content .pizza { width: 120px; height: 145px; position: absolute; right: 2%; top: 18%; }
+
+        @media only all and (max-width: 767px) {
+            .section01 .content { height: 800px; }
+            .title-area { display: flex; justify-content: center; padding: 80px 0 60px; }
+
+            .roulette {
+                width: 350px;
+                height: 350px;
+                padding-top: 30px;
+                position: relative;
+                text-align: center;
+                margin: 0 auto;
+            }
+            .roulette_end_wheel { width: 280px; height: 280px; position: absolute; left: 50%; transform: translateX(-50%); bottom: 35px; z-index: 99; }
+            .roulette-niddle {
+                width: 29px;
+                height: 43px;
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translate(-50%, -5px);
+                z-index: 201;filter: drop-shadow(5px 3px 0 #000);
+            }
+            .roulette_center { display: block; width: 150px; height: 50px; margin: 50px auto 0; cursor: pointer; }
+
+            .section02 .content .candycane { width: 45px; height: 85px; position: absolute; left: 7%; top: 3%; }
+            .section02 .content .pizza { width: 80px; height: 105px; position: absolute; right: 2%; top: 13%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="section01">
+        <div class="content">
+            <div class="title-area">
+                <img src="kolmar-roulette/content-text.png" alt="">
+            </div>
+
+            <div class="event-wrap">
+                <div class="roulette">
+                    <div class="roulette_wheel_box"><img class="roulette_wheel" src="kolmar-roulette/roulette_wheel.png" alt="룰렛"></div>
+                    <div class="roulette_end_wheel">
+                        <img class="end_wheel_img end_wheel_img01" src="kolmar-roulette/어깨피자_당첨시.png" alt="룰렛">
+                        <img class="end_wheel_img end_wheel_img02" src="kolmar-roulette/kolmar-result02.png" alt="룰렛">
+                        <img class="end_wheel_img end_wheel_img03" src="kolmar-roulette/주름피자_당첨시.png" alt="룰렛">
+                        <img class="end_wheel_img end_wheel_img04" src="kolmar-roulette/활짝피자_당첨시.png" alt="룰렛">
+
+                        <img class="end_wheel_img end_wheel_img05" src="kolmar-roulette/재접속_시.png" alt="룰렛">
+                    </div>
+                    <img src="r_img/end_wheel_obj.png" class="end_wheel_obj end_wheel_obj01">
+                    <img src="r_img/end_wheel_obj02.png" class="end_wheel_obj end_wheel_obj02">
+
+                    <button class="start_button roulette_center" onclick="roulette_start()"><img src="kolmar-roulette/roulette_button.png"></button>
+
+                    <!-- 실제 배포시에는 삭제 -->
+                    <button onclick="resetRoulette()" style="position: absolute; top: 0; left: 0;">룰렛 초기화<br>(실제 배포 시 삭제)</button>
+
+                    <div class="arrow middle">
+                        <img src="kolmar-roulette/needle.png" class="roulette-niddle" alt="바늘">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section02">
+        <div class="content">
+            <img src="kolmar-roulette/bg2.png" class="bg2">
+            <img src="kolmar-roulette/gif/지팡이.gif" class="candycane" alt="">
+            <img src="kolmar-roulette/gif/피자.gif" class="pizza" alt="">
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        // 실제 배포 시에는 삭제
+        function resetRoulette() {
+            localStorage.removeItem('rouletteEnded');
+            location.reload();
+        }
+
+        // 상태 변수 선언
+        var duplicate_participation = false; // 중복 참여 여부
+        var duplicate_regno = false; // 중복 등록 여부
+        var roulette_stoping = true;
+        var new_challenger = true;
+        var $roulette_event_close = false;
+
+        var new_challenger = !duplicate_participation 
+            ? (!duplicate_regno ? true : false)
+            : true;
+
+        function roulette_start() {
+            if (!$roulette_event_close) {
+                if (roulette_stoping) {
+                    if (new_challenger) {
+                        new_challenger = false; // 버튼을 다시 누를 수 없도록 설정
+                        roulette_stoping = false;
+
+                        // 룰렛 설정
+                        const spinTime = 2000; // 2초
+                        const totalSpins = 5; // 총 바퀴 수
+                        const roulette_section_count = 8; // 섹션 수
+                        const sectionAngle = 360 / roulette_section_count; // 섹션당 각도
+
+                        // 랜덤 섹션 선택 (0 ~ 섹션 수 - 1)
+                        let result = Math.floor(Math.random() * roulette_section_count);
+
+                        // 목표 각도 계산 (시계 방향 기준)
+                        const targetAngle = 360 * totalSpins + result * sectionAngle;
+
+                        // 애니메이션 실행
+                        $('.roulette_wheel').css('transform', `rotate(${targetAngle}deg)`);
+
+                        // 일정 시간 후 결과 반환
+                        setTimeout(() => {
+                            game_result(result); // 시계 방향 값 사용
+                            roulette_stoping = true;
+
+                            // 상태 저장
+                            localStorage.setItem('rouletteEnded', 'true');
+                        }, spinTime);
+                    }
+                }
+            }
+        }
+
+        function game_result(result) {
+            console.log(`결과 섹션: ${result}`);
+
+            $('.start_button').hide();
+
+            setTimeout(() => {
+                // 반시계 방향
+                switch (result) {
+                case 0:
+                    $('.end_wheel_img01').addClass('show');
+                    break;
+                case 1:
+                    $('.end_wheel_img02').addClass('show');
+                    break;
+                case 2:
+                    $('.end_wheel_img03').addClass('show');
+                    break;
+                case 3:
+                    $('.end_wheel_img04').addClass('show');
+                    break;
+                case 4:
+                    $('.end_wheel_img01').addClass('show');
+                    break;
+                case 5:
+                    $('.end_wheel_img02').addClass('show');
+                    break;
+                case 6:
+                    $('.end_wheel_img03').addClass('show');
+                    break;
+                case 7:
+                    $('.end_wheel_img04').addClass('show');
+                    break;
+                }
+            }, 500);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const rouletteEnded = localStorage.getItem('rouletteEnded');
+
+            if (rouletteEnded === 'true') {
+                $('.start_button').hide();
+
+                $('.end_wheel_img05').show();
+            }
+        });
+    </script>
+</body>
+</html>
